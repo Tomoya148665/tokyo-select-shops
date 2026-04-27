@@ -53,8 +53,32 @@ button { font-family: inherit; }
   display: flex; align-items: center; gap: 6px;
   margin-bottom: 6px; margin-left: auto;
 }
-.area-filter-label {
+.area-filter-label, .filter-label {
   font-size: 11px; color: var(--text-dim); font-weight: 600; letter-spacing: 0.04em;
+}
+
+.rank-filter-wrap {
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 6px;
+}
+.rank-chips {
+  display: inline-flex;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+.rank-chip {
+  appearance: none; border: none; background: transparent;
+  color: var(--text-dim); padding: 4px 10px; border-radius: 4px;
+  font-size: 11px; font-weight: 600; font-family: inherit;
+  cursor: pointer; letter-spacing: 0.04em;
+  transition: background .15s, color .15s;
+}
+.rank-chip:hover { color: var(--text); }
+.rank-chip.is-active {
+  background: var(--accent); color: #fff;
 }
 
 .area-multiselect { position: relative; }
@@ -166,21 +190,11 @@ button { font-family: inherit; }
 /* ---------- Shop list cards ---------- */
 .shop-list { list-style: none; margin: 0; padding: 0; }
 .shop-item {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 12px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: background .15s;
 }
-.shop-thumb {
-  width: 96px; height: 96px; flex-shrink: 0;
-  overflow: hidden; border-radius: 6px;
-  background: var(--surface-2);
-}
-.shop-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.shop-body { min-width: 0; }
 .shop-item:hover { background: var(--surface-2); }
 .shop-item.is-active { background: var(--surface-2); border-left: 3px solid var(--accent); padding-left: 13px; }
 
@@ -190,18 +204,18 @@ button { font-family: inherit; }
 
 /* Per-category rank badges (e.g. "ハイファッション 1位") */
 .rank-badges {
-  display: flex; flex-wrap: wrap; gap: 4px;
-  margin-bottom: 6px;
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-bottom: 8px;
 }
 .rank-badge {
-  font-size: 10px; letter-spacing: 0.04em;
-  padding: 3px 8px; border-radius: 4px;
+  font-size: 11px; letter-spacing: 0.04em;
+  padding: 3px 9px; border-radius: 4px;
   font-weight: 600;
   color: #fff;
   display: inline-flex; align-items: baseline; gap: 4px;
   white-space: nowrap;
 }
-.rank-badge strong { font-weight: 800; font-size: 11px; }
+.rank-badge strong { font-weight: 800; font-size: 12px; }
 .rank-mens           { background: var(--accent-6); }
 .rank-high-sense     { background: var(--accent-3); color: #0e0e10; }
 .rank-high-fashion   { background: var(--accent-2); }
@@ -228,22 +242,54 @@ button { font-family: inherit; }
   border-radius: var(--radius); box-shadow: var(--shadow);
 }
 .leaflet-popup-tip { background: var(--surface); }
-.leaflet-popup-content { margin: 0; font-size: 13px; line-height: 1.5; min-width: 260px; }
-.leaflet-popup-content > div:not(.popup-image),
-.leaflet-popup-content > a { margin-left: 16px; margin-right: 16px; }
-.leaflet-popup-content > div.rank-badges { margin-top: 12px; }
-.leaflet-popup-content > a.popup-link { display: inline-block; margin-bottom: 14px; }
-.leaflet-popup-content > .popup-meta:last-of-type { margin-bottom: 8px; }
-
-.popup-image {
-  width: 100%; aspect-ratio: 16 / 10; overflow: hidden;
-  background: var(--surface-2);
-  border-top-left-radius: var(--radius);
-  border-top-right-radius: var(--radius);
+.leaflet-popup-content {
+  margin: 16px 18px; font-size: 14px; line-height: 1.55;
+  min-width: 480px; max-width: 560px;
 }
+
+/* Make the rank badges in popups much more prominent */
+.popup-rank-badges {
+  margin: 0 0 10px;
+  gap: 6px;
+}
+.popup-rank-badges .rank-badge {
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 5px;
+  letter-spacing: 0.04em;
+}
+.popup-rank-badges .rank-badge strong {
+  font-size: 14px;
+  font-weight: 800;
+}
+.rank-area {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+/* Description text and image side-by-side, equal width */
+.popup-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+  margin: 10px 0 12px;
+  min-height: 140px;
+}
+.popup-row .popup-desc { margin: 0; font-size: 13px; line-height: 1.6; }
+.popup-image {
+  overflow: hidden; border-radius: 6px;
+  background: var(--surface-2);
+}
+.popup-image.is-hidden { display: none; }
 .popup-image img {
   width: 100%; height: 100%; object-fit: cover; display: block;
 }
+
+.popup-name { font-size: 17px !important; font-weight: 700; }
+.popup-name-ja { font-size: 12px; }
 .popup-rank { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.06em; }
 .popup-name { font-size: 15px; font-weight: 700; margin: 2px 0 1px; }
 .popup-name-ja { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }

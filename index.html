@@ -43,8 +43,18 @@
         </button>
       </nav>
 
+      <div class="rank-filter-wrap">
+        <span class="filter-label">🏆 順位</span>
+        <div class="rank-chips" role="radiogroup" aria-label="順位で絞り込み">
+          <button type="button" class="rank-chip is-active" data-rank-limit="0">ALL</button>
+          <button type="button" class="rank-chip" data-rank-limit="3">TOP3</button>
+          <button type="button" class="rank-chip" data-rank-limit="5">TOP5</button>
+          <button type="button" class="rank-chip" data-rank-limit="10">TOP10</button>
+        </div>
+      </div>
+
       <div class="area-filter-wrap">
-        <span class="area-filter-label">📍 エリア</span>
+        <span class="filter-label">📍 エリア</span>
         <div class="area-multiselect">
           <button type="button" class="area-button" id="area-button" aria-haspopup="listbox" aria-expanded="false">
             <span id="area-button-label">すべて</span>

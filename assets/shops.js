@@ -13,8 +13,8 @@ window.SHOPS = [
    * ============================================================ */
   {
     id: "dover-street-market-ginza", name: "DOVER STREET MARKET GINZA", nameJa: "ドーバー ストリート マーケット 銀座",
-    tags: ["high-fashion","mens"], rank: 1, area: "銀座",
-    address: "東京都中央区銀座6-9-5 ギンザコマツ東館",
+    tags: ["high-fashion"], ranks: { "high-fashion": 1 }, area: "銀座",
+    address: "東京都中央区銀座6-9-5 ギンザコマツ西館 1F〜6F",
     coords: [35.6699, 139.7642],
     image: "https://assets.st-note.com/img/1721651687995-yjKwD02sbB.jpg",
     description: "コム・デ・ギャルソンの川久保玲がディレクションする世界的ハイブランド集積店。フロアごとに違うインスタレーション空間。",
@@ -23,7 +23,7 @@ window.SHOPS = [
   },
   {
     id: "estnation-roppongi", name: "ESTNATION Roppongi Hills", nameJa: "エストネーション 六本木ヒルズ",
-    tags: ["high-fashion","mens"], rank: 2, area: "六本木",
+    tags: ["high-fashion"], ranks: { "high-fashion": 2 }, area: "六本木",
     address: "東京都港区六本木6-10-2 六本木ヒルズ ヒルサイドけやき坂コンプレックス1F・2F",
     coords: [35.6604, 139.7292],
     image: "https://assets.st-note.com/img/1721651597823-oeq53u65gO.jpg",
@@ -33,7 +33,7 @@ window.SHOPS = [
   },
   {
     id: "restir-roppongi", name: "RESTIR Boutique", nameJa: "リステア ブティック",
-    tags: ["high-fashion"], rank: 3, area: "赤坂",
+    tags: ["high-fashion"], ranks: { "high-fashion": 3 }, area: "赤坂",
     address: "東京都港区赤坂9-6-17",
     coords: [35.6663, 139.7320],
     image: "https://assets.st-note.com/img/1721651527067-sPggvDokol.jpg",
@@ -43,8 +43,8 @@ window.SHOPS = [
   },
   {
     id: "gr8", name: "GR8", nameJa: "グレイト",
-    tags: ["high-fashion","street","mens"], rank: 4, area: "原宿",
-    address: "東京都渋谷区神宮前1-11-6 ラフォーレ原宿 2F",
+    tags: ["high-fashion","street"], ranks: { "high-fashion": 4, "street": 11 }, area: "原宿",
+    address: "東京都渋谷区神宮前1-11-6 ラフォーレ原宿 2.5F",
     coords: [35.6685, 139.7035],
     image: "https://assets.st-note.com/img/1721651453136-fUJqqq1DKy.jpg",
     description: "ストリート×ハイブランドの先端。ラフォーレ原宿内、新進気鋭デザイナーの取扱量が圧巻。",
@@ -53,8 +53,8 @@ window.SHOPS = [
   },
   {
     id: "addition-adelaide", name: "ADDITION ADELAIDE", nameJa: "アディッション アデライデ",
-    tags: ["high-fashion"], rank: 5, area: "原宿",
-    address: "東京都渋谷区神宮前4-19-8 アロープラザ1F",
+    tags: ["high-fashion"], ranks: { "high-fashion": 5 }, area: "原宿",
+    address: "東京都渋谷区神宮前4-19-8 アロープラザ原宿 1F",
     coords: [35.6695, 139.7080],
     image: "https://assets.st-note.com/img/1721651279479-5RHiwHYdFD.jpg",
     description: "原宿の隠れ家的ハイファッション。モード好きの大人女性に支持される。",
@@ -63,8 +63,8 @@ window.SHOPS = [
   },
   {
     id: "tabaya-united-arrows", name: "TABAYA UNITED ARROWS", nameJa: "タバヤ ユナイテッドアローズ",
-    tags: ["high-fashion","mens"], rank: 6, area: "原宿",
-    address: "東京都渋谷区神宮前3-28-1",
+    tags: ["high-fashion"], ranks: { "high-fashion": 6 }, area: "原宿",
+    address: "東京都渋谷区神宮前3-28-1 B1F〜2F",
     coords: [35.6712, 139.7068],
     image: "https://assets.st-note.com/img/1721958584342-PXPLXfyojD.jpg",
     description: "ユナイテッドアローズの上級ライン。2025年4月リニューアルし、限定ピースとカフェバーを併設。",
@@ -73,17 +73,17 @@ window.SHOPS = [
   },
   {
     id: "international-gallery-beams", name: "International Gallery BEAMS", nameJa: "インターナショナル ギャラリー ビームス 原宿",
-    tags: ["high-fashion","mens"], rank: 7, area: "原宿",
-    address: "東京都渋谷区神宮前3-25-15 1F",
+    tags: ["high-fashion"], ranks: { "high-fashion": 7 }, area: "原宿",
+    address: "東京都渋谷区神宮前3-25-15 神宮前テラス 1F・2F",
     coords: [35.6710, 139.7062],
     image: "https://assets.st-note.com/img/1721651177630-V4PTk00Zog.jpg",
     description: "BEAMSのモードライン旗艦店。世界中のクリエイションが集結する別格の品揃え。",
-    hours: { open: "11:00", close: "20:00", closedDays: [] }, stayMin: 30,
+    hours: { open: "12:00", close: "20:00", closedDays: [] }, stayMin: 30,
     url: "https://www.beams.co.jp/shop/igb/"
   },
   {
     id: "land-of-tomorrow", name: "LAND OF TOMORROW", nameJa: "ランド オブ トゥモロー 丸の内店",
-    tags: ["high-fashion"], rank: 8, area: "丸の内",
+    tags: ["high-fashion"], ranks: { "high-fashion": 8 }, area: "丸の内",
     address: "東京都千代田区丸の内2-6-1 丸の内パークビル ブリックスクエア1F・2F",
     coords: [35.6776, 139.7634],
     image: "https://assets.st-note.com/img/1721650886877-9TrvCIMoCe.jpg",
@@ -93,7 +93,7 @@ window.SHOPS = [
   },
   {
     id: "lift-daikanyama", name: "Lift DAIKANYAMA", nameJa: "リフト 代官山",
-    tags: ["high-fashion","mens"], rank: 9, area: "代官山",
+    tags: ["high-fashion"], ranks: { "high-fashion": 9 }, area: "代官山",
     address: "東京都渋谷区代官山町16-5 アドレスガーデン代官山101",
     coords: [35.6488, 139.7036],
     image: "https://assets.st-note.com/img/1721650819281-LN57cNr6WN.jpg",
@@ -103,12 +103,12 @@ window.SHOPS = [
   },
   {
     id: "midwest-tokyo", name: "MIDWEST TOKYO", nameJa: "ミッドウエスト トウキョウ",
-    tags: ["high-fashion","mens"], rank: 10, area: "渋谷",
+    tags: ["high-fashion"], ranks: { "high-fashion": 10 }, area: "渋谷",
     address: "東京都渋谷区神南1-6-1",
     coords: [35.6620, 139.6997],
     image: "https://assets.st-note.com/img/1721650187295-aJioxr1si7.jpg",
     description: "国内外の旬ブランドをいち早く取り入れるセレクト。トレンドのハブ。",
-    hours: { open: "12:00", close: "20:00", closedDays: ["Thu"] }, stayMin: 30,
+    hours: { open: "12:00", close: "20:00", closedDays: [] }, stayMin: 30,
     url: "https://store-midwest.com/"
   },
 
@@ -117,7 +117,7 @@ window.SHOPS = [
    * ============================================================ */
   {
     id: "biotop", name: "BIOTOP", nameJa: "ビオトープ",
-    tags: ["high-sense","quality-simple"], rank: 1, area: "白金台",
+    tags: ["high-sense"], ranks: { "high-sense": 1 }, area: "白金台",
     address: "東京都港区白金台4-6-44",
     coords: [35.6388, 139.7217],
     image: "https://assets.st-note.com/img/1721654697130-YHn7AwjKwz.jpg",
@@ -127,7 +127,7 @@ window.SHOPS = [
   },
   {
     id: "graphpaper", name: "Graphpaper AOYAMA", nameJa: "グラフペーパー 青山",
-    tags: ["high-sense","quality-simple","mens"], rank: 2, area: "原宿",
+    tags: ["high-sense","quality-simple"], ranks: { "high-sense": 2 }, area: "原宿",
     address: "東京都渋谷区神宮前5-36-6 ケーリーマンション 1F/2F",
     coords: [35.6645, 139.7080],
     image: "https://assets.st-note.com/img/1721654593851-TYqbPWCwWZ.jpg",
@@ -137,17 +137,17 @@ window.SHOPS = [
   },
   {
     id: "h-beauty-and-youth", name: "H BEAUTY&YOUTH", nameJa: "エイチ ビューティーアンドユース",
-    tags: ["high-sense","quality-simple","mens"], rank: 3, area: "南青山",
+    tags: ["high-sense"], ranks: { "high-sense": 3 }, area: "南青山",
     address: "東京都港区南青山3-14-17 H 1〜2F",
     coords: [35.6660, 139.7148],
     image: "https://assets.st-note.com/img/1721655193032-eTzdW7WLqu.jpg",
     description: "ユナイテッドアローズの上級セレクト。建築自体がアートで、空間体験そのものが価値。",
-    hours: { open: "11:00", close: "20:00", closedDays: [] }, stayMin: 35,
+    hours: { open: "12:00", close: "20:00", closedDays: [] }, stayMin: 35,
     url: "https://store.united-arrows.co.jp/shop/by/h/"
   },
   {
     id: "ron-herman-sendagaya", name: "Ron Herman Sendagaya", nameJa: "ロン ハーマン 千駄ヶ谷店",
-    tags: ["high-sense"], rank: 4, area: "千駄ヶ谷",
+    tags: ["high-sense"], ranks: { "high-sense": 4 }, area: "千駄ヶ谷",
     address: "東京都渋谷区千駄ヶ谷2-11-1",
     coords: [35.6802, 139.7100],
     image: "https://assets.st-note.com/img/1721653775432-Bc6nEvAY92.jpg",
@@ -157,9 +157,9 @@ window.SHOPS = [
   },
   {
     id: "cabinet-of-curiosities", name: "CABINET OF CURIOSITIES", nameJa: "キャビネット オブ キュリオシティーズ",
-    tags: ["high-sense"], rank: 5, area: "日比谷",
-    address: "東京都千代田区有楽町1-1-2 東京ミッドタウン日比谷 3F HIBIYA CENTRAL MARKET内",
-    coords: [35.6735, 139.7607],
+    tags: ["high-sense"], ranks: { "high-sense": 5 }, area: "日比谷",
+    address: "東京都千代田区有楽町1-1-2 東京ミッドタウン日比谷 3F",
+    coords: [35.6738, 139.7593],
     image: "https://assets.st-note.com/img/1721653325810-rQalLl3Drl.jpg",
     description: "ヴィンテージ家具とモードを融合した独自の世界観。HIBIYA CENTRAL MARKET内の名物店。",
     hours: { open: "11:00", close: "20:00", closedDays: [] }, stayMin: 30,
@@ -167,17 +167,17 @@ window.SHOPS = [
   },
   {
     id: "carol", name: "carol", nameJa: "キャロル",
-    tags: ["high-sense"], rank: 6, area: "原宿",
-    address: "東京都渋谷区神宮前5-23-3 長谷部ビル 1F",
+    tags: ["high-sense"], ranks: { "high-sense": 6 }, area: "原宿",
+    address: "東京都渋谷区神宮前5-45-3 1F",
     coords: [35.6660, 139.7100],
     image: "https://assets.st-note.com/img/1721653240949-uMePHzKt1a.jpg",
     description: "原宿の路地裏、こだわりが詰まった大人カジュアル。隠れ家系。",
-    hours: { open: "12:00", close: "20:00", closedDays: ["Wed"] }, stayMin: 25,
+    hours: { open: "12:00", close: "19:00", closedDays: ["Wed"] }, stayMin: 25,
     url: "https://storecarol.com/"
   },
   {
     id: "coverchord-nakameguro", name: "COVERCHORD nakameguro", nameJa: "カバーコード 中目黒",
-    tags: ["high-sense","quality-simple","mens"], rank: 7, area: "中目黒",
+    tags: ["high-sense"], ranks: { "high-sense": 7 }, area: "中目黒",
     address: "東京都目黒区青葉台1-23-14 1F",
     coords: [35.6437, 139.6985],
     image: "https://assets.st-note.com/img/1721653157800-VSXmuUYD05.jpg",
@@ -187,7 +187,7 @@ window.SHOPS = [
   },
   {
     id: "1ldk-aoyama", name: "1LDK AOYAMA HOTEL", nameJa: "ワンエルディーケー 青山",
-    tags: ["high-sense","quality-simple","mens"], rank: 8, area: "表参道",
+    tags: ["high-sense","quality-simple"], ranks: { "high-sense": 8 }, area: "表参道",
     address: "東京都渋谷区神宮前5-47-11 青山学院アスタジオ 1F",
     coords: [35.6655, 139.7115],
     image: "https://assets.st-note.com/img/1721653055286-KVVuLdQdhE.jpg",
@@ -197,7 +197,7 @@ window.SHOPS = [
   },
   {
     id: "the-library-omotesando", name: "THE LIBRARY 表参道店", nameJa: "ザ ライブラリー 表参道店",
-    tags: ["high-sense"], rank: 9, area: "表参道",
+    tags: ["high-sense","quality-simple"], ranks: { "high-sense": 9 }, area: "表参道",
     address: "東京都渋谷区神宮前4-11-2 高野ビル 1F",
     coords: [35.6685, 139.7068],
     image: "https://assets.st-note.com/img/1721652784901-RNsvh04Mua.jpg",
@@ -207,7 +207,7 @@ window.SHOPS = [
   },
   {
     id: "style-department", name: "style department", nameJa: "スタイル デパートメント",
-    tags: ["high-sense"], rank: 10, area: "奥渋",
+    tags: ["high-sense"], ranks: { "high-sense": 10 }, area: "奥渋",
     address: "東京都渋谷区神山町7-12 グランデュオ神山町 102",
     coords: [35.6628, 139.6955],
     image: "https://assets.st-note.com/img/1757857209-dKFN08gmeuarItLDHxZQ4iTh.jpg",
@@ -221,7 +221,7 @@ window.SHOPS = [
    * ============================================================ */
   {
     id: "palace-skateboards", name: "PALACE SKATEBOARDS TOKYO", nameJa: "パレス スケートボード 東京",
-    tags: ["street","mens"], rank: 1, area: "原宿",
+    tags: ["street"], ranks: { "street": 1 }, area: "原宿",
     address: "東京都渋谷区神宮前5-9-20 2F・3F",
     coords: [35.6655, 139.7088],
     image: "https://assets.st-note.com/img/1751795644-uUbLyKVIBQz2hnMv0J53N1lc.jpg",
@@ -231,7 +231,7 @@ window.SHOPS = [
   },
   {
     id: "v-a", name: "V.A.", nameJa: "ヴイエー",
-    tags: ["street","high-fashion","mens"], rank: 2, area: "原宿",
+    tags: ["street"], ranks: { "street": 2 }, area: "原宿",
     address: "東京都渋谷区神宮前6-1-9",
     coords: [35.6680, 139.7060],
     image: "https://assets.st-note.com/img/1751795757-aKYXmftnIpS9TxMONFVCr5R6.jpg",
@@ -241,7 +241,7 @@ window.SHOPS = [
   },
   {
     id: "bape-store", name: "BAPE STORE 原宿", nameJa: "ベイプストア 原宿",
-    tags: ["street","mens"], rank: 3, area: "原宿",
+    tags: ["street"], ranks: { "street": 3 }, area: "原宿",
     address: "東京都渋谷区神宮前4-21-5",
     coords: [35.6700, 139.7080],
     image: "https://assets.st-note.com/img/1751803866-LzituSHnlBRs37g82Cc9U640.jpg",
@@ -251,7 +251,7 @@ window.SHOPS = [
   },
   {
     id: "brain-dead-studios", name: "BRAIN DEAD STUDIOS", nameJa: "ブレインデッド ステュディオズ",
-    tags: ["street","mens"], rank: 4, area: "原宿",
+    tags: ["street"], ranks: { "street": 4 }, area: "原宿",
     address: "東京都渋谷区神宮前4-29-8",
     coords: [35.6700, 139.7090],
     image: "https://assets.st-note.com/img/1751803898-lPWnfUvwVThD2i53ytX1xpaR.jpg",
@@ -261,8 +261,8 @@ window.SHOPS = [
   },
   {
     id: "neighborhood-harajuku", name: "NEIGHBORHOOD 原宿", nameJa: "ネイバーフッド 原宿",
-    tags: ["street","mens"], rank: 5, area: "原宿",
-    address: "東京都渋谷区神宮前4-32-7",
+    tags: ["street"], ranks: { "street": 5 }, area: "原宿",
+    address: "東京都渋谷区神宮前4-32-7 1F",
     coords: [35.6710, 139.7100],
     image: "https://assets.st-note.com/img/1751803934-bPAu8sYazNO4gnBUmr6hpRZE.jpg",
     description: "裏原の代表ブランド NEIGHBORHOOD の１号店。タフでクラフト感ある世界観。",
@@ -271,8 +271,8 @@ window.SHOPS = [
   },
   {
     id: "supreme-harajuku", name: "Supreme 原宿", nameJa: "シュプリーム 原宿",
-    tags: ["street","mens"], rank: 6, area: "原宿",
-    address: "東京都渋谷区神宮前4-32-7",
+    tags: ["street"], ranks: { "street": 6 }, area: "原宿",
+    address: "東京都渋谷区神宮前4-32-7 2F",
     coords: [35.6712, 139.7100],
     image: "https://assets.st-note.com/img/1751803974-vIZDaKgHBUTAP1dzq9ifhWJ6.jpg",
     description: "アメリカを代表するストリートブランド Supreme の裏原宿店。聖地のひとつ。",
@@ -281,7 +281,7 @@ window.SHOPS = [
   },
   {
     id: "carhartt-wip-harajuku", name: "Carhartt WIP Store 原宿", nameJa: "カーハート ダブリューアイピー 原宿",
-    tags: ["street","mens"], rank: 7, area: "原宿",
+    tags: ["street"], ranks: { "street": 7 }, area: "原宿",
     address: "東京都渋谷区神宮前4-28-25",
     coords: [35.6707, 139.7088],
     image: "https://assets.st-note.com/img/1751796096-Q0TvtfPVs1Rbp5ZjUl6Xomq9.jpg",
@@ -291,7 +291,7 @@ window.SHOPS = [
   },
   {
     id: "stussy-harajuku", name: "STUSSY 原宿 (Chapter)", nameJa: "ステューシー 原宿",
-    tags: ["street","mens"], rank: 8, area: "原宿",
+    tags: ["street"], ranks: { "street": 8 }, area: "原宿",
     address: "東京都渋谷区神宮前4-28-2",
     coords: [35.6705, 139.7092],
     image: "https://assets.st-note.com/img/1751796174-6zdsCeZjk4VmWBF7ycTaHbiG.jpg",
@@ -301,7 +301,7 @@ window.SHOPS = [
   },
   {
     id: "noah-clubhouse", name: "NOAH CLUBHOUSE", nameJa: "ノア クラブハウス",
-    tags: ["street","mens"], rank: 9, area: "原宿",
+    tags: ["street"], ranks: { "street": 9 }, area: "原宿",
     address: "東京都渋谷区神宮前4-26-29",
     coords: [35.6700, 139.7088],
     image: "https://assets.st-note.com/img/1751804010-0cX2zpGZJvHhRflDNg58imT7.jpg",
@@ -311,8 +311,8 @@ window.SHOPS = [
   },
   {
     id: "studious-3rd", name: "STUDIOUS 3rd 原宿店", nameJa: "ステュディオス 3rd 原宿店",
-    tags: ["street","high-fashion","mens"], rank: 10, area: "原宿",
-    address: "東京都渋谷区神宮前4-28-5",
+    tags: ["street"], ranks: { "street": 10 }, area: "原宿",
+    address: "東京都渋谷区神宮前4-28-5 1F",
     coords: [35.6705, 139.7090],
     image: "https://assets.st-note.com/img/1751804034-ix9GZwFedYTl30C72rvpbNk8.jpg",
     description: "日本ブランドのみを取り扱う “TOKYO” を体現するセレクト。",
@@ -321,7 +321,7 @@ window.SHOPS = [
   },
   {
     id: "nubian-harajuku", name: "NUBIAN HARAJUKU", nameJa: "ヌビアン 原宿",
-    tags: ["street","high-fashion","mens"], rank: 12, area: "原宿",
+    tags: ["street","mens"], ranks: { "street": 12, "mens": 1 }, area: "原宿",
     address: "東京都渋谷区神宮前1-20-2",
     coords: [35.6680, 139.7048],
     image: "https://assets.st-note.com/img/1751804059-D8ImgrTRsPG2kSihbVac3XN0.jpg",
@@ -331,7 +331,7 @@ window.SHOPS = [
   },
   {
     id: "blackeyepatch-harajuku", name: "BlackEyePatch Harajuku", nameJa: "ブラックアイパッチ 原宿",
-    tags: ["street","mens"], rank: 13, area: "原宿",
+    tags: ["street"], ranks: { "street": 13 }, area: "原宿",
     address: "東京都渋谷区神宮前3-21-20",
     coords: [35.6712, 139.7080],
     image: "https://assets.st-note.com/img/1751901092-lpviyxzPgmuMtFXBYrDKVTUN.jpg",
@@ -341,7 +341,7 @@ window.SHOPS = [
   },
   {
     id: "bape-think", name: "BAPE THINK", nameJa: "ベイプシンク",
-    tags: ["street","mens"], rank: 14, area: "原宿",
+    tags: ["street"], ranks: { "street": 14 }, area: "原宿",
     address: "東京都渋谷区神宮前3-25-13",
     coords: [35.6710, 139.7068],
     image: "https://assets.st-note.com/img/1751901106-9iZRp2GkcJ8I4SqyQXVeCAWH.jpg",
@@ -351,8 +351,8 @@ window.SHOPS = [
   },
   {
     id: "union-tokyo", name: "UNION TOKYO", nameJa: "ユニオン トウキョウ",
-    tags: ["street","mens"], rank: 15, area: "原宿",
-    address: "東京都渋谷区神宮前2-26-5",
+    tags: ["street","mens"], ranks: { "street": 15, "mens": 4 }, area: "原宿",
+    address: "東京都渋谷区神宮前2-26-5 1F",
     coords: [35.6735, 139.7080],
     image: "https://assets.st-note.com/img/1751804101-a8WG2AtBRcbF09hxzZYvULNJ.jpg",
     description: "L.A.発UNIONの東京旗艦。Air Jordanコラボなどでも有名。",
@@ -361,8 +361,8 @@ window.SHOPS = [
   },
   {
     id: "soph-tokyo", name: "SOPH. TOKYO", nameJa: "ソフ トウキョウ",
-    tags: ["street","mens"], rank: 16, area: "原宿",
-    address: "東京都渋谷区神宮前3-34-10",
+    tags: ["street"], ranks: { "street": 16 }, area: "原宿",
+    address: "東京都渋谷区神宮前3-34-10 1F",
     coords: [35.6725, 139.7060],
     image: "https://assets.st-note.com/img/1751804137-w6MPb8nRzCd2fGIiexYSyUmQ.jpg",
     description: "F.C.Real Bristol/uniform experiment のSOPH.旗艦店。スポーツ×モード。",
@@ -371,7 +371,7 @@ window.SHOPS = [
   },
   {
     id: "human-made-offline", name: "HUMAN MADE OFFLINE STORE", nameJa: "ヒューマンメイド オフラインストア",
-    tags: ["street","mens"], rank: 17, area: "外苑前",
+    tags: ["street"], ranks: { "street": 17 }, area: "外苑前",
     address: "東京都渋谷区神宮前2-6-6 秀和外苑レジデンス1F",
     coords: [35.6735, 139.7113],
     image: "https://assets.st-note.com/img/1751804150-BuzDmrKt1Sb4qxYOhZ0i2ncJ.jpg",
@@ -385,7 +385,7 @@ window.SHOPS = [
    * ============================================================ */
   {
     id: "le-grand-closet-parigot-man", name: "Le GRAND CLOSET de PARIGOT MAN GINZA SIX", nameJa: "ル グランド クローゼット ドゥ パリゴ マン 銀座シックス",
-    tags: ["mens","high-fashion"], rank: 2, area: "銀座",
+    tags: ["mens"], ranks: { "mens": 2 }, area: "銀座",
     address: "東京都中央区銀座6-10-1 GINZA SIX 5F",
     coords: [35.6695, 139.7635],
     image: "https://assets.st-note.com/img/1721657937464-vThHmRU6JK.jpg",
@@ -395,8 +395,8 @@ window.SHOPS = [
   },
   {
     id: "lechoppe-aoyama", name: "L'ECHOPPE 青山店", nameJa: "レショップ 青山店",
-    tags: ["mens","quality-simple"], rank: 3, area: "南青山",
-    address: "東京都港区南青山3-17-3",
+    tags: ["mens"], ranks: { "mens": 3 }, area: "南青山",
+    address: "東京都港区南青山3-17-3 1F",
     coords: [35.6663, 139.7130],
     image: "https://assets.st-note.com/img/1757851649-OuSg52Lh8dVBrTtxm1iG4YKl.png",
     description: "上質ベーシックを軸にしたシップス系セレクト。スーツも私服も網羅。",
@@ -405,8 +405,8 @@ window.SHOPS = [
   },
   {
     id: "1ldk-nakameguro", name: "1LDK", nameJa: "ワンエルディーケー (中目黒本店)",
-    tags: ["mens","quality-simple","high-sense"], rank: 5, area: "中目黒",
-    address: "東京都目黒区上目黒1-7-13",
+    tags: ["mens"], ranks: { "mens": 5 }, area: "中目黒",
+    address: "東京都目黒区上目黒1-7-13 B-TOWN EAST 1F",
     coords: [35.6435, 139.6982],
     image: "https://assets.st-note.com/img/1721659261082-8bCMRDupCl.jpg",
     description: "1LDK の本店。生活と地続きの審美眼で選ばれるアパレル&雑貨。",
@@ -415,7 +415,7 @@ window.SHOPS = [
   },
   {
     id: "maidens-shop", name: "MAIDENS SHOP", nameJa: "メイデンズ ショップ",
-    tags: ["mens","quality-simple"], rank: 6, area: "原宿",
+    tags: ["mens"], ranks: { "mens": 6 }, area: "原宿",
     address: "東京都渋谷区神宮前2-19-12",
     coords: [35.6728, 139.7090],
     image: "https://assets.st-note.com/img/1721657509436-vfpfKk0Cf7.jpg",
@@ -425,8 +425,8 @@ window.SHOPS = [
   },
   {
     id: "best-packing-store", name: "BEST PACKING STORE", nameJa: "ベスト パッキング ストア",
-    tags: ["mens","quality-simple"], rank: 7, area: "中目黒",
-    address: "東京都目黒区青葉台1-23-5",
+    tags: ["mens"], ranks: { "mens": 7 }, area: "中目黒",
+    address: "東京都目黒区青葉台1-23-5 1F",
     coords: [35.6438, 139.6985],
     image: "https://assets.st-note.com/img/1721657403869-os9blELqVt.jpg",
     description: "アメリカンスタンダードを上質に再解釈。中目黒の名店。",
@@ -435,9 +435,9 @@ window.SHOPS = [
   },
   {
     id: "waremokou", name: "吾亦紅", nameJa: "ワレモコウ",
-    tags: ["mens","quality-simple"], rank: 8, area: "渋谷",
-    address: "東京都渋谷区神南1-17-4 神南ビル",
-    coords: [35.6620, 139.6990],
+    tags: ["mens"], ranks: { "mens": 8 }, area: "渋谷",
+    address: "東京都渋谷区神南1-17-4 神南ビル B1F・4F",
+    coords: [35.6618, 139.6989],
     image: "https://assets.st-note.com/img/1757849813-2zp107TKAjqBUDnQNvbMJkYE.jpg",
     description: "和の美意識でセレクトされた大人向けのアイテム。職人モノ多数。",
     hours: { open: "11:30", close: "21:00", closedDays: [] }, stayMin: 25,
@@ -445,9 +445,9 @@ window.SHOPS = [
   },
   {
     id: "eliminator", name: "ELIMINATOR", nameJa: "エリミネイター",
-    tags: ["mens"], rank: 9, area: "代官山",
+    tags: ["mens"], ranks: { "mens": 9 }, area: "代官山",
     address: "東京都渋谷区猿楽町26-13 グレイス代官山1F",
-    coords: [35.6488, 139.7036],
+    coords: [35.6494, 139.7039],
     image: "https://assets.st-note.com/img/1721657206133-X4rLE6Nmds.jpg",
     description: "アメカジxドレスをミックス。骨太なメンズスタイル。",
     hours: { open: "12:00", close: "19:00", closedDays: [] }, stayMin: 25,
@@ -455,7 +455,7 @@ window.SHOPS = [
   },
   {
     id: "freshservice-hq", name: "FreshService headquarters", nameJa: "フレッシュサービス ヘッドクォーターズ",
-    tags: ["mens","quality-simple"], rank: 10, area: "原宿",
+    tags: ["mens"], ranks: { "mens": 10 }, area: "原宿",
     address: "東京都渋谷区神宮前2-6-7",
     coords: [35.6738, 139.7115],
     image: "https://assets.st-note.com/img/1757848068-UlPWLK7os46dYuDqmrEjBc5w.jpg",

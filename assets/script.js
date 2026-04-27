@@ -41,6 +41,8 @@
   let currentCategory = "all";
   /** @type {Set<string>} 空 = すべてのエリアを表示 */
   const selectedAreas = new Set();
+  /** 0 = no limit, otherwise show only shops ranked ≤ rankLimit in the relevant category */
+  let rankLimit = 0;
   let routeLayer = null;
   let routeMarkersLayer = null;
 
@@ -70,11 +72,25 @@
     return r < 999 ? r : null;
   }
   // HTML for ranking badges per category (shown in cards & popups)
+  // Shows ranked categories with "1位" and tag-only categories without a number.
   function rankBadgesHtml(shop) {
-    if (!shop.ranks) return "";
-    return Object.entries(shop.ranks)
-      .sort((a, b) => CATEGORY_ORDER.indexOf(a[0]) - CATEGORY_ORDER.indexOf(b[0]))
-      .map(([cat, n]) => `<span class="rank-badge rank-${cat}">${CATEGORY_LABEL[cat]} <strong>${n}位</strong></span>`)
+    const items = [];
+    const ranks = shop.ranks || {};
+    Object.entries(ranks).forEach(([cat, n]) => {
+      items.push({ cat, n });
+    });
+    (shop.tags || []).forEach((cat) => {
+      if (ranks[cat] != null) return;
+      if (!CATEGORY_LABEL[cat]) return;
+      items.push({ cat, n: null });
+    });
+    return items
+      .sort((a, b) => CATEGORY_ORDER.indexOf(a.cat) - CATEGORY_ORDER.indexOf(b.cat))
+      .map(({ cat, n }) =>
+        n != null
+          ? `<span class="rank-badge rank-${cat}">${CATEGORY_LABEL[cat]} <strong>${n}位</strong></span>`
+          : `<span class="rank-badge rank-${cat}">${CATEGORY_LABEL[cat]}</span>`
+      )
       .join("");
   }
   function shopMatchesCategory(shop, category) {
@@ -83,8 +99,24 @@
   function shopMatchesAreas(shop) {
     return selectedAreas.size === 0 || selectedAreas.has(shop.area);
   }
+  function shopMatchesRankLimit(shop) {
+    if (!rankLimit) return true;
+    const ranks = shop.ranks || {};
+    if (currentCategory === "all") {
+      // Any rank ≤ limit qualifies; shops with no ranks fail when limit is set
+      const vals = Object.values(ranks);
+      return vals.length > 0 && Math.min(...vals) <= rankLimit;
+    }
+    // Specific category: must have rank in that category ≤ limit.
+    // Categories without rankings (quality-simple) bypass the rank gate.
+    if (ranks[currentCategory] != null) return ranks[currentCategory] <= rankLimit;
+    if (currentCategory === "quality-simple") return true;
+    return false;
+  }
   function shopMatchesFilters(shop) {
-    return shopMatchesCategory(shop, currentCategory) && shopMatchesAreas(shop);
+    return shopMatchesCategory(shop, currentCategory)
+      && shopMatchesAreas(shop)
+      && shopMatchesRankLimit(shop);
   }
   function fmtTime(min) {
     const total = Math.round(min);
@@ -152,15 +184,20 @@
     const closedTxt = shop.hours.closedDays.length
       ? ` (定休: ${shop.hours.closedDays.map(jaDay).join("・")})` : "";
     const imgHtml = shop.image
-      ? `<div class="popup-image"><img src="${escapeHtml(shop.image)}?width=600" alt="${escapeHtml(shop.name)}" loading="lazy" onerror="this.parentNode.style.display='none'" /></div>`
+      ? `<div class="popup-image"><img src="${escapeHtml(shop.image)}?width=800" alt="${escapeHtml(shop.name)}" loading="lazy" onerror="this.parentNode.classList.add('is-hidden')" /></div>`
       : "";
     return `
-      ${imgHtml}
-      <div class="rank-badges">${rankBadgesHtml(shop)}</div>
+      <div class="rank-badges popup-rank-badges">
+        ${rankBadgesHtml(shop)}
+        <span class="rank-badge rank-area">📍 ${escapeHtml(shop.area)}</span>
+      </div>
       <div class="popup-name">${escapeHtml(shop.name)}</div>
       <div class="popup-name-ja">${escapeHtml(shop.nameJa)}</div>
-      <div class="popup-desc">${escapeHtml(shop.description)}</div>
-      <div class="popup-meta">📍 ${escapeHtml(shop.address)}</div>
+      <div class="popup-row">
+        <div class="popup-desc">${escapeHtml(shop.description)}</div>
+        ${imgHtml}
+      </div>
+      <div class="popup-meta">🏠 ${escapeHtml(shop.address)}</div>
       <div class="popup-meta">🕐 ${shop.hours.open}–${shop.hours.close}${closedTxt} ／ 滞在目安 ${shop.stayMin}分</div>
       ${shop.url ? `<a class="popup-link" href="${shop.url}" target="_blank" rel="noopener">公式サイト →</a>` : ""}
     `;
@@ -200,22 +237,16 @@
       li.dataset.id = shop.id;
       const closedTxt = shop.hours.closedDays.length
         ? `定休:${shop.hours.closedDays.map(jaDay).join("・")}` : "";
-      const thumbHtml = shop.image
-        ? `<div class="shop-thumb"><img src="${escapeHtml(shop.image)}?width=400" alt="" loading="lazy" onerror="this.parentNode.style.display='none'" /></div>`
-        : "";
       li.innerHTML = `
-        ${thumbHtml}
-        <div class="shop-body">
-          <div class="rank-badges">${rankBadgesHtml(shop)}</div>
-          <div class="shop-name">${escapeHtml(shop.name)}</div>
-          <div class="shop-name-ja">${escapeHtml(shop.nameJa)}</div>
-          <div class="shop-desc">${escapeHtml(shop.description)}</div>
-          <div class="shop-meta">
-            <span>📍 ${escapeHtml(shop.area)}</span>
-            <span>🕐 ${shop.hours.open}–${shop.hours.close}</span>
-            <span>⏱ ${shop.stayMin}分</span>
-            ${closedTxt ? `<span>🚫 ${closedTxt}</span>` : ""}
-          </div>
+        <div class="rank-badges">${rankBadgesHtml(shop)}</div>
+        <div class="shop-name">${escapeHtml(shop.name)}</div>
+        <div class="shop-name-ja">${escapeHtml(shop.nameJa)}</div>
+        <div class="shop-desc">${escapeHtml(shop.description)}</div>
+        <div class="shop-meta">
+          <span>📍 ${escapeHtml(shop.area)}</span>
+          <span>🕐 ${shop.hours.open}–${shop.hours.close}</span>
+          <span>⏱ ${shop.stayMin}分</span>
+          ${closedTxt ? `<span>🚫 ${closedTxt}</span>` : ""}
         </div>
       `;
       li.addEventListener("click", () => focusShop(shop.id));
@@ -265,6 +296,16 @@
       });
       tab.classList.add("is-active"); tab.setAttribute("aria-selected", "true");
       currentCategory = tab.dataset.category;
+      applyFilters();
+    });
+  });
+
+  // Rank-limit chips
+  document.querySelectorAll(".rank-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll(".rank-chip").forEach((c) => c.classList.remove("is-active"));
+      chip.classList.add("is-active");
+      rankLimit = Number(chip.dataset.rankLimit) || 0;
       applyFilters();
     });
   });
@@ -350,13 +391,25 @@
     });
   }
 
-  // Counts adapt to current area filter so tab badges are meaningful
+  // Tab badge counts respect area + rank limit (but ignore current tab)
   function updateCounts() {
-    const inArea = shopMatchesAreas;
-    document.querySelector('[data-count="all"]').textContent = window.SHOPS.filter(inArea).length;
+    const passes = (shop, cat) => {
+      if (!shopMatchesAreas(shop)) return false;
+      if (cat !== "all" && !shop.tags.includes(cat)) return false;
+      if (!rankLimit) return true;
+      const ranks = shop.ranks || {};
+      if (cat === "all") {
+        const vals = Object.values(ranks);
+        return vals.length > 0 && Math.min(...vals) <= rankLimit;
+      }
+      if (cat === "quality-simple") return true;
+      return ranks[cat] != null && ranks[cat] <= rankLimit;
+    };
+    document.querySelector('[data-count="all"]').textContent =
+      window.SHOPS.filter((s) => passes(s, "all")).length;
     CATEGORY_ORDER.forEach((cat) => {
       const el = document.querySelector(`[data-count="${cat}"]`);
-      if (el) el.textContent = window.SHOPS.filter((s) => inArea(s) && s.tags.includes(cat)).length;
+      if (el) el.textContent = window.SHOPS.filter((s) => passes(s, cat)).length;
     });
   }
 
