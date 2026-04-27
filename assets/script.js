@@ -30,67 +30,16 @@
    * ============================================================ */
   const map = L.map("map", { center: TOKYO_CENTER, zoom: 13, scrollWheelZoom: true });
 
-  // Tile themes
-  const TILE_THEMES = {
-    dark: {
-      url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      label: "ダーク", icon: "🌃", grayscale: false
-    },
-    mono: {
-      url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      label: "白黒",   icon: "⚫", grayscale: true
-    },
-    light: {
-      url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      label: "ライト", icon: "🌞", grayscale: false
-    }
-  };
-  const TILE_ATTR = "&copy; OpenStreetMap &copy; CARTO";
-  let tileLayer = null;
-  let currentTheme = localStorage.getItem("mapTheme") || "dark";
-
-  function applyTheme(name) {
-    const theme = TILE_THEMES[name] || TILE_THEMES.dark;
-    if (tileLayer) map.removeLayer(tileLayer);
-    tileLayer = L.tileLayer(theme.url, {
-      attribution: TILE_ATTR, subdomains: "abcd", maxZoom: 19
-    }).addTo(map);
-    document.body.classList.toggle("map-grayscale", !!theme.grayscale);
-    document.body.classList.toggle("map-light", name !== "dark");
-    currentTheme = name;
-    localStorage.setItem("mapTheme", name);
-    // Update theme button label
-    const btn = document.getElementById("theme-btn-label");
-    if (btn) btn.textContent = `${theme.icon} ${theme.label}`;
-  }
-  applyTheme(currentTheme);
-
-  // Theme toggle control (top right of map)
-  const ThemeControl = L.Control.extend({
-    options: { position: "topright" },
-    onAdd: function () {
-      const div = L.DomUtil.create("div", "leaflet-bar theme-control");
-      div.innerHTML = `<button type="button" title="地図テーマ切替"><span id="theme-btn-label"></span></button>`;
-      L.DomEvent.disableClickPropagation(div);
-      div.querySelector("button").addEventListener("click", () => {
-        const order = ["dark", "mono", "light"];
-        const idx = order.indexOf(currentTheme);
-        applyTheme(order[(idx + 1) % order.length]);
-      });
-      // Set initial label
-      setTimeout(() => {
-        const lbl = div.querySelector("#theme-btn-label");
-        const t = TILE_THEMES[currentTheme];
-        lbl.textContent = `${t.icon} ${t.label}`;
-      }, 0);
-      return div;
-    }
-  });
-  map.addControl(new ThemeControl());
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    attribution: "&copy; OpenStreetMap &copy; CARTO",
+    subdomains: "abcd",
+    maxZoom: 19
+  }).addTo(map);
 
   /** @type {Map<string, L.Marker>} */
   const markers = new Map();
   let currentCategory = "all";
+  let currentArea = "all";
   let routeLayer = null;
   let routeMarkersLayer = null;
 
@@ -108,6 +57,12 @@
   }
   function shopMatchesCategory(shop, category) {
     return category === "all" || shop.tags.includes(category);
+  }
+  function shopMatchesArea(shop, area) {
+    return area === "all" || shop.area === area;
+  }
+  function shopMatchesFilters(shop) {
+    return shopMatchesCategory(shop, currentCategory) && shopMatchesArea(shop, currentArea);
   }
   function fmtTime(min) {
     const total = Math.round(min);
@@ -186,17 +141,18 @@
   const listEl = document.getElementById("shop-list");
   const listCountEl = document.getElementById("list-count");
 
-  function renderList(category) {
+  function renderList() {
     listEl.innerHTML = "";
     const filtered = window.SHOPS
-      .filter((s) => shopMatchesCategory(s, category))
+      .filter(shopMatchesFilters)
       .sort((a, b) => {
         const ra = a.rank ?? 999, rb = b.rank ?? 999;
         if (ra !== rb) return ra - rb;
         return a.name.localeCompare(b.name);
       });
 
-    listCountEl.textContent = `${filtered.length}店表示中`;
+    const areaLabel = currentArea === "all" ? "" : ` ／ 📍${currentArea}`;
+    listCountEl.textContent = `${filtered.length}店表示中${areaLabel}`;
 
     filtered.forEach((shop) => {
       const li = document.createElement("li");
@@ -244,20 +200,18 @@
   }
 
   /* ============================================================
-   * Category filter (top tabs)
+   * Filters: category (tabs) + area (dropdown)
    * ============================================================ */
-  function applyCategory(category) {
-    currentCategory = category;
+  function applyFilters() {
     window.SHOPS.forEach((shop) => {
       const m = markers.get(shop.id);
-      const visible = shopMatchesCategory(shop, category);
+      const visible = shopMatchesFilters(shop);
       if (visible) { if (!map.hasLayer(m)) m.addTo(map); }
       else { if (map.hasLayer(m)) map.removeLayer(m); }
     });
-    renderList(category);
-    const visibleCoords = window.SHOPS
-      .filter((s) => shopMatchesCategory(s, category))
-      .map((s) => s.coords);
+    renderList();
+    updateCounts();
+    const visibleCoords = window.SHOPS.filter(shopMatchesFilters).map((s) => s.coords);
     if (visibleCoords.length > 0) {
       map.flyToBounds(L.latLngBounds(visibleCoords).pad(0.18), { duration: 0.5 });
     }
@@ -269,15 +223,37 @@
         t.classList.remove("is-active"); t.setAttribute("aria-selected", "false");
       });
       tab.classList.add("is-active"); tab.setAttribute("aria-selected", "true");
-      applyCategory(tab.dataset.category);
+      currentCategory = tab.dataset.category;
+      applyFilters();
     });
   });
 
+  // Build area dropdown
+  const areaSelect = document.getElementById("area-filter");
+  function buildAreaOptions() {
+    // Preserve "すべて" + add areas sorted by shop count desc
+    const counts = new Map();
+    window.SHOPS.forEach((s) => counts.set(s.area, (counts.get(s.area) || 0) + 1));
+    const areas = Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ja"));
+
+    const total = window.SHOPS.length;
+    areaSelect.innerHTML = `<option value="all">すべて (${total})</option>` +
+      areas.map(([area, n]) => `<option value="${escapeHtml(area)}">${escapeHtml(area)} (${n})</option>`).join("");
+    areaSelect.value = currentArea;
+  }
+  areaSelect.addEventListener("change", () => {
+    currentArea = areaSelect.value;
+    applyFilters();
+  });
+
+  // Counts adapt to current area filter so tab badges are meaningful
   function updateCounts() {
-    document.querySelector('[data-count="all"]').textContent = window.SHOPS.length;
+    const inArea = (s) => shopMatchesArea(s, currentArea);
+    document.querySelector('[data-count="all"]').textContent = window.SHOPS.filter(inArea).length;
     CATEGORY_ORDER.forEach((cat) => {
       const el = document.querySelector(`[data-count="${cat}"]`);
-      if (el) el.textContent = window.SHOPS.filter((s) => s.tags.includes(cat)).length;
+      if (el) el.textContent = window.SHOPS.filter((s) => inArea(s) && s.tags.includes(cat)).length;
     });
   }
 
@@ -300,8 +276,7 @@
 
   document.getElementById("btn-route-from-list").addEventListener("click", () => {
     document.querySelector('.panel-tab[data-mode="route"]').click();
-    // Pre-select shops from current category
-    setTimeout(() => selectChecksByCategory(currentCategory), 0);
+    setTimeout(() => selectChecksByCurrentFilters(), 0);
   });
 
   /* ============================================================
@@ -320,7 +295,7 @@
     });
     sorted.forEach((shop) => {
       const id = `chk-${shop.id}`;
-      const checked = shopMatchesCategory(shop, currentCategory);
+      const checked = shopMatchesFilters(shop);
       const el = document.createElement("label");
       el.innerHTML = `
         <input type="checkbox" id="${id}" value="${shop.id}" ${checked ? "checked" : ""} />
@@ -329,10 +304,10 @@
       routeChecksEl.appendChild(el);
     });
   }
-  function selectChecksByCategory(cat) {
+  function selectChecksByCurrentFilters() {
     routeChecksEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
       const shop = window.SHOPS.find((s) => s.id === cb.value);
-      cb.checked = shopMatchesCategory(shop, cat);
+      cb.checked = shopMatchesFilters(shop);
     });
   }
 
@@ -341,7 +316,7 @@
   document.getElementById("btn-select-none").addEventListener("click", () =>
     routeChecksEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => cb.checked = false));
   document.getElementById("btn-select-current").addEventListener("click", () =>
-    selectChecksByCategory(currentCategory));
+    selectChecksByCurrentFilters());
 
   routeForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -563,7 +538,7 @@
     // Polyline through start → stops → end
     const path = [startPoint.coords, ...stops.map((s) => s.coords), endPoint.coords];
     routeLayer = L.polyline(path, {
-      color: "#d4af37", weight: 3.5, opacity: 0.85,
+      color: "#b8902a", weight: 3.5, opacity: 0.9,
       dashArray: "8 8", lineCap: "round"
     }).addTo(map);
 
@@ -643,6 +618,7 @@
   /* ============================================================
    * Init
    * ============================================================ */
+  buildAreaOptions();
   updateCounts();
-  renderList("all");
+  renderList();
 })();

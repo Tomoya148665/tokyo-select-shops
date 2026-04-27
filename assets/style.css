@@ -1,19 +1,19 @@
 :root {
-  --bg: #0e0e10;
-  --surface: #1a1a1d;
-  --surface-2: #232328;
-  --surface-3: #2a2a30;
-  --text: #f5f5f7;
-  --text-dim: #b8b8c0;
-  --text-faint: #8b8b95;
-  --accent: #d4af37;
-  --accent-2: #ff5b8a;        /* high-fashion */
-  --accent-3: #6ad1d6;        /* high-sense */
-  --accent-4: #ffa84a;        /* street */
-  --accent-5: #c4a8ff;        /* quality-simple */
-  --accent-6: #5fa8ff;        /* mens */
-  --border: #2a2a30;
-  --shadow: 0 6px 24px rgba(0, 0, 0, .35);
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f3f3f5;
+  --surface-3: #e6e6eb;
+  --text: #1a1a1d;
+  --text-dim: #5f5f6a;
+  --text-faint: #9a9aa3;
+  --accent: #b8902a;
+  --accent-2: #d4356d;        /* high-fashion */
+  --accent-3: #1f8b91;        /* high-sense */
+  --accent-4: #c46e1f;        /* street */
+  --accent-5: #7a5cc8;        /* quality-simple */
+  --accent-6: #1f6dc8;        /* mens */
+  --border: #e6e6eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .08);
   --radius: 12px;
 }
 
@@ -33,7 +33,7 @@ button { font-family: inherit; }
 
 /* ---------- Header ---------- */
 .site-header {
-  background: linear-gradient(180deg, #16161a 0%, #0e0e10 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f7f7f9 100%);
   border-bottom: 1px solid var(--border);
   padding: 14px 22px 0;
   position: sticky; top: 0; z-index: 1000;
@@ -44,8 +44,28 @@ button { font-family: inherit; }
 .title-en { font-size: 11px; font-weight: 400; color: var(--text-dim); letter-spacing: 0.18em; }
 .subtitle { margin: 0; color: var(--text-dim); font-size: 12px; }
 
+/* ---------- Filter row (tabs + area select) ---------- */
+.filter-row {
+  display: flex; align-items: flex-end; gap: 14px;
+  margin-top: 10px; flex-wrap: wrap;
+}
+.area-filter-wrap {
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 6px; margin-left: auto;
+}
+.area-filter-wrap label {
+  font-size: 11px; color: var(--text-dim); font-weight: 600; letter-spacing: 0.04em;
+}
+.area-filter-wrap select {
+  background: var(--surface-2); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 10px; border-radius: 6px;
+  font-size: 12px; font-family: inherit; font-weight: 600;
+  cursor: pointer; min-width: 130px;
+}
+.area-filter-wrap select:hover { border-color: var(--accent); }
+
 /* ---------- Top tabs ---------- */
-.tabs { display: flex; gap: 0; margin-top: 10px; overflow-x: auto; }
+.tabs { display: flex; gap: 0; overflow-x: auto; flex: 1 1 auto; min-width: 0; }
 .tab {
   appearance: none; border: none; background: transparent; color: var(--text-dim);
   padding: 10px 14px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
@@ -73,34 +93,7 @@ button { font-family: inherit; }
   min-height: 480px;
 }
 .map-area { position: relative; }
-#map { width: 100%; height: 100%; background: #1a1a1d; }
-
-/* Map themes — apply filter only to tile pane so markers/lines stay colored */
-body.map-grayscale .leaflet-tile-pane {
-  filter: grayscale(1) contrast(1.05);
-}
-body.map-light #map { background: #f5f5f7; }
-
-/* Theme toggle control (top-right of map) */
-.theme-control {
-  border: none !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,.4);
-  border-radius: 8px !important;
-  overflow: hidden;
-}
-.theme-control button {
-  appearance: none;
-  border: none;
-  background: var(--surface);
-  color: var(--text);
-  padding: 8px 12px;
-  font-size: 13px; font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  display: block;
-  white-space: nowrap;
-}
-.theme-control button:hover { background: var(--surface-2); }
+#map { width: 100%; height: 100%; background: #f5f5f7; }
 
 .side-panel {
   background: var(--surface);
@@ -153,7 +146,7 @@ body.map-light #map { background: #f5f5f7; }
 .shop-rank {
   font-size: 10px; font-weight: 700; color: var(--accent);
   letter-spacing: 0.06em; flex-shrink: 0;
-  background: rgba(212,175,55,.12); padding: 2px 6px; border-radius: 3px;
+  background: rgba(184,144,42,.12); padding: 2px 6px; border-radius: 3px;
 }
 .shop-tags { display: inline-flex; gap: 4px; flex-wrap: wrap; }
 .shop-tag {
@@ -199,25 +192,25 @@ body.map-light #map { background: #f5f5f7; }
   width: 28px; height: 28px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 700; color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,.45);
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
   border: 2px solid #fff;
   background: #888;
 }
 .shop-marker.cat-mens          { background: var(--accent-6); }
-.shop-marker.cat-high-sense    { background: var(--accent-3); color: #0e0e10; }
+.shop-marker.cat-high-sense    { background: var(--accent-3); }
 .shop-marker.cat-high-fashion  { background: var(--accent-2); }
-.shop-marker.cat-street        { background: var(--accent-4); color: #0e0e10; }
-.shop-marker.cat-quality-simple{ background: var(--accent-5); color: #0e0e10; }
+.shop-marker.cat-street        { background: var(--accent-4); }
+.shop-marker.cat-quality-simple{ background: var(--accent-5); }
 
 .route-marker {
   width: 32px; height: 32px; border-radius: 50%;
-  background: var(--accent); color: #0e0e10;
+  background: var(--accent); color: #ffffff;
   display: flex; align-items: center; justify-content: center;
   font-size: 13px; font-weight: 800;
   border: 3px solid #fff;
-  box-shadow: 0 2px 10px rgba(0,0,0,.6);
+  box-shadow: 0 2px 10px rgba(0,0,0,.22);
 }
-.route-marker.terminus { background: #fff; color: #0e0e10; font-size: 14px; }
+.route-marker.terminus { background: var(--text); color: #ffffff; font-size: 14px; }
 
 /* ---------- Route form ---------- */
 .route-form { padding: 14px; display: flex; flex-direction: column; gap: 14px; }
@@ -258,7 +251,7 @@ body.map-light #map { background: #f5f5f7; }
 }
 
 .btn-primary {
-  appearance: none; border: none; background: var(--accent); color: #0e0e10;
+  appearance: none; border: none; background: var(--accent); color: #ffffff;
   padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700;
   cursor: pointer; letter-spacing: 0.04em;
 }
@@ -281,8 +274,8 @@ body.map-light #map { background: #f5f5f7; }
 .route-summary-item .value { font-size: 16px; font-weight: 700; }
 
 .route-warning {
-  font-size: 11px; color: #ffb27d;
-  background: rgba(255,168,74,.08); border: 1px solid rgba(255,168,74,.3);
+  font-size: 11px; color: #a35211;
+  background: rgba(196,110,31,.10); border: 1px solid rgba(196,110,31,.35);
   padding: 8px 10px; border-radius: 6px; margin-bottom: 10px;
 }
 
@@ -297,11 +290,11 @@ body.map-light #map { background: #f5f5f7; }
 .timeline-dot {
   position: absolute; left: 6px; top: 7px;
   width: 18px; height: 18px; border-radius: 50%;
-  background: var(--accent); color: #0e0e10;
+  background: var(--accent); color: #ffffff;
   display: flex; align-items: center; justify-content: center;
   font-size: 10px; font-weight: 800;
 }
-.timeline-item.terminus .timeline-dot { background: #fff; }
+.timeline-item.terminus .timeline-dot { background: var(--text); color: #ffffff; }
 .timeline-item.travel .timeline-dot { background: var(--surface-3); color: var(--text-dim); font-size: 11px; }
 .timeline-time { font-size: 11px; color: var(--text-dim); font-weight: 600; }
 .timeline-name { font-size: 13px; font-weight: 700; margin: 2px 0; }
