@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>東京セレクトショップ MAP | Tokyo Select Shops</title>
-  <meta name="description" content="東京のハイセンス／ハイファッション系セレクトショップを地図で一覧。タブで切り替え可能。" />
+  <meta name="description" content="東京のセレクトショップを地図で一覧。タブ切替・ルート計画機能つき。" />
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin="" />
-
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
@@ -20,18 +18,27 @@
         <span class="title-jp">東京セレクトショップ MAP</span>
         <span class="title-en">Tokyo Select Shops</span>
       </h1>
-      <p class="subtitle">気になるショップを地図でチェック。タブでカテゴリを切替できます。</p>
+      <p class="subtitle">タブでカテゴリ切替／一覧から最適ルートも計画できます。</p>
     </div>
 
     <nav class="tabs" role="tablist" aria-label="カテゴリ切替">
       <button class="tab is-active" role="tab" data-category="all" aria-selected="true">
         ALL <span class="count" data-count="all"></span>
       </button>
+      <button class="tab" role="tab" data-category="mens" aria-selected="false">
+        メンズ <span class="count" data-count="mens"></span>
+      </button>
       <button class="tab" role="tab" data-category="high-sense" aria-selected="false">
         ハイセンス <span class="count" data-count="high-sense"></span>
       </button>
       <button class="tab" role="tab" data-category="high-fashion" aria-selected="false">
         ハイファッション <span class="count" data-count="high-fashion"></span>
+      </button>
+      <button class="tab" role="tab" data-category="street" aria-selected="false">
+        ストリート <span class="count" data-count="street"></span>
+      </button>
+      <button class="tab" role="tab" data-category="quality-simple" aria-selected="false">
+        上質シンプル <span class="count" data-count="quality-simple"></span>
       </button>
     </nav>
   </header>
@@ -41,8 +48,84 @@
       <div id="map" aria-label="東京セレクトショップの地図"></div>
     </section>
 
-    <aside class="list-area" aria-label="ショップ一覧">
-      <ul id="shop-list" class="shop-list"></ul>
+    <aside class="side-panel" aria-label="サイドパネル">
+      <div class="panel-tabs" role="tablist">
+        <button class="panel-tab is-active" data-mode="list" role="tab" aria-selected="true">📋 一覧</button>
+        <button class="panel-tab" data-mode="route" role="tab" aria-selected="false">🗺️ ルート計画</button>
+      </div>
+
+      <!-- ===== List mode ===== -->
+      <div class="panel-body" data-pane="list">
+        <div class="list-toolbar">
+          <span class="list-count" id="list-count">—</span>
+          <button class="btn-mini" id="btn-route-from-list">このタブでルート計画 →</button>
+        </div>
+        <ul id="shop-list" class="shop-list"></ul>
+      </div>
+
+      <!-- ===== Route mode ===== -->
+      <div class="panel-body is-hidden" data-pane="route">
+        <form id="route-form" class="route-form" autocomplete="off">
+          <div class="form-row">
+            <label>開始時刻
+              <input type="time" name="startTime" value="11:00" required />
+            </label>
+            <label>終了時刻
+              <input type="time" name="endTime" value="19:00" required />
+            </label>
+          </div>
+
+          <label class="form-row-full">出発地点
+            <select name="startPoint">
+              <option value="shibuya">渋谷駅</option>
+              <option value="harajuku" selected>原宿駅</option>
+              <option value="omotesando">表参道駅</option>
+              <option value="ginza">銀座駅</option>
+              <option value="roppongi">六本木駅</option>
+              <option value="nakameguro">中目黒駅</option>
+              <option value="geo">📍 現在地</option>
+            </select>
+          </label>
+
+          <label class="form-row-full">帰着地点
+            <select name="endPoint">
+              <option value="same" selected>出発地点と同じ</option>
+              <option value="shibuya">渋谷駅</option>
+              <option value="harajuku">原宿駅</option>
+              <option value="omotesando">表参道駅</option>
+              <option value="ginza">銀座駅</option>
+              <option value="roppongi">六本木駅</option>
+              <option value="nakameguro">中目黒駅</option>
+            </select>
+          </label>
+
+          <div class="form-row">
+            <label>標準滞在時間
+              <input type="number" name="defaultStay" value="30" min="5" max="120" step="5" /> <span class="unit">分</span>
+            </label>
+            <label>移動係数
+              <select name="travelMode">
+                <option value="walk" selected>徒歩中心</option>
+                <option value="mixed">徒歩+電車</option>
+              </select>
+            </label>
+          </div>
+
+          <fieldset class="filter-set">
+            <legend>対象ショップ（チェックを外すと除外）</legend>
+            <div class="filter-controls">
+              <button type="button" class="btn-mini" id="btn-select-all">全選択</button>
+              <button type="button" class="btn-mini" id="btn-select-none">全解除</button>
+              <button type="button" class="btn-mini" id="btn-select-current">現在のタブのみ</button>
+            </div>
+            <div id="route-shop-checks" class="route-shop-checks"></div>
+          </fieldset>
+
+          <button type="submit" class="btn-primary">ルートを計算</button>
+        </form>
+
+        <section id="route-result" class="route-result is-hidden"></section>
+      </div>
     </aside>
   </main>
 
@@ -52,11 +135,9 @@
     </small>
   </footer>
 
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
-
   <script src="assets/shops.js"></script>
   <script src="assets/script.js"></script>
 </body>
