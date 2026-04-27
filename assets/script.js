@@ -39,7 +39,8 @@
   /** @type {Map<string, L.Marker>} */
   const markers = new Map();
   let currentCategory = "all";
-  let currentArea = "all";
+  /** @type {Set<string>} 空 = すべてのエリアを表示 */
+  const selectedAreas = new Set();
   let routeLayer = null;
   let routeMarkersLayer = null;
 
@@ -58,11 +59,11 @@
   function shopMatchesCategory(shop, category) {
     return category === "all" || shop.tags.includes(category);
   }
-  function shopMatchesArea(shop, area) {
-    return area === "all" || shop.area === area;
+  function shopMatchesAreas(shop) {
+    return selectedAreas.size === 0 || selectedAreas.has(shop.area);
   }
   function shopMatchesFilters(shop) {
-    return shopMatchesCategory(shop, currentCategory) && shopMatchesArea(shop, currentArea);
+    return shopMatchesCategory(shop, currentCategory) && shopMatchesAreas(shop);
   }
   function fmtTime(min) {
     const total = Math.round(min);
@@ -151,7 +152,9 @@
         return a.name.localeCompare(b.name);
       });
 
-    const areaLabel = currentArea === "all" ? "" : ` ／ 📍${currentArea}`;
+    const areaLabel = selectedAreas.size === 0
+      ? ""
+      : ` ／ 📍${Array.from(selectedAreas).join("・")}`;
     listCountEl.textContent = `${filtered.length}店表示中${areaLabel}`;
 
     filtered.forEach((shop) => {
@@ -228,28 +231,90 @@
     });
   });
 
-  // Build area dropdown
-  const areaSelect = document.getElementById("area-filter");
+  // ----- Area multi-select (popover) -----
+  const areaButton = document.getElementById("area-button");
+  const areaButtonLabel = document.getElementById("area-button-label");
+  const areaPopover = document.getElementById("area-popover");
+  const areaOptionsEl = document.getElementById("area-options");
+
   function buildAreaOptions() {
-    // Preserve "すべて" + add areas sorted by shop count desc
     const counts = new Map();
     window.SHOPS.forEach((s) => counts.set(s.area, (counts.get(s.area) || 0) + 1));
     const areas = Array.from(counts.entries())
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ja"));
 
-    const total = window.SHOPS.length;
-    areaSelect.innerHTML = `<option value="all">すべて (${total})</option>` +
-      areas.map(([area, n]) => `<option value="${escapeHtml(area)}">${escapeHtml(area)} (${n})</option>`).join("");
-    areaSelect.value = currentArea;
+    areaOptionsEl.innerHTML = areas.map(([area, n]) => `
+      <label>
+        <input type="checkbox" value="${escapeHtml(area)}" ${selectedAreas.has(area) ? "checked" : ""} />
+        <span>${escapeHtml(area)}</span>
+        <span class="area-count">${n}</span>
+      </label>
+    `).join("");
+
+    areaOptionsEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      cb.addEventListener("change", () => {
+        if (cb.checked) selectedAreas.add(cb.value);
+        else selectedAreas.delete(cb.value);
+        updateAreaButtonLabel();
+        applyFilters();
+      });
+    });
   }
-  areaSelect.addEventListener("change", () => {
-    currentArea = areaSelect.value;
+
+  function updateAreaButtonLabel() {
+    if (selectedAreas.size === 0) {
+      areaButtonLabel.textContent = "すべて";
+    } else if (selectedAreas.size === 1) {
+      areaButtonLabel.textContent = Array.from(selectedAreas)[0];
+    } else {
+      const arr = Array.from(selectedAreas);
+      areaButtonLabel.textContent = `${arr[0]} +${arr.length - 1}件`;
+    }
+  }
+
+  areaButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const opening = areaPopover.classList.contains("is-hidden");
+    areaPopover.classList.toggle("is-hidden");
+    areaButton.setAttribute("aria-expanded", String(opening));
+  });
+  document.addEventListener("click", (e) => {
+    if (!areaPopover.classList.contains("is-hidden")
+        && !areaPopover.contains(e.target)
+        && !areaButton.contains(e.target)) {
+      areaPopover.classList.add("is-hidden");
+      areaButton.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !areaPopover.classList.contains("is-hidden")) {
+      areaPopover.classList.add("is-hidden");
+      areaButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  document.getElementById("area-select-all").addEventListener("click", () => {
+    selectedAreas.clear();
+    window.SHOPS.forEach((s) => selectedAreas.add(s.area));
+    syncAreaCheckboxes();
+    updateAreaButtonLabel();
     applyFilters();
   });
+  document.getElementById("area-select-none").addEventListener("click", () => {
+    selectedAreas.clear();
+    syncAreaCheckboxes();
+    updateAreaButtonLabel();
+    applyFilters();
+  });
+  function syncAreaCheckboxes() {
+    areaOptionsEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      cb.checked = selectedAreas.has(cb.value);
+    });
+  }
 
   // Counts adapt to current area filter so tab badges are meaningful
   function updateCounts() {
-    const inArea = (s) => shopMatchesArea(s, currentArea);
+    const inArea = shopMatchesAreas;
     document.querySelector('[data-count="all"]').textContent = window.SHOPS.filter(inArea).length;
     CATEGORY_ORDER.forEach((cat) => {
       const el = document.querySelector(`[data-count="${cat}"]`);

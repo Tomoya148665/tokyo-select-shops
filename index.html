@@ -21,26 +21,45 @@
       <p class="subtitle">タブでカテゴリ切替／一覧から最適ルートも計画できます。</p>
     </div>
 
-    <nav class="tabs" role="tablist" aria-label="カテゴリ切替">
-      <button class="tab is-active" role="tab" data-category="all" aria-selected="true">
-        ALL <span class="count" data-count="all"></span>
-      </button>
-      <button class="tab" role="tab" data-category="mens" aria-selected="false">
-        メンズ <span class="count" data-count="mens"></span>
-      </button>
-      <button class="tab" role="tab" data-category="high-sense" aria-selected="false">
-        ハイセンス <span class="count" data-count="high-sense"></span>
-      </button>
-      <button class="tab" role="tab" data-category="high-fashion" aria-selected="false">
-        ハイファッション <span class="count" data-count="high-fashion"></span>
-      </button>
-      <button class="tab" role="tab" data-category="street" aria-selected="false">
-        ストリート <span class="count" data-count="street"></span>
-      </button>
-      <button class="tab" role="tab" data-category="quality-simple" aria-selected="false">
-        上質シンプル <span class="count" data-count="quality-simple"></span>
-      </button>
-    </nav>
+    <div class="filter-row">
+      <nav class="tabs" role="tablist" aria-label="カテゴリ切替">
+        <button class="tab is-active" role="tab" data-category="all" aria-selected="true">
+          ALL <span class="count" data-count="all"></span>
+        </button>
+        <button class="tab" role="tab" data-category="mens" aria-selected="false">
+          メンズ <span class="count" data-count="mens"></span>
+        </button>
+        <button class="tab" role="tab" data-category="high-sense" aria-selected="false">
+          ハイセンス <span class="count" data-count="high-sense"></span>
+        </button>
+        <button class="tab" role="tab" data-category="high-fashion" aria-selected="false">
+          ハイファッション <span class="count" data-count="high-fashion"></span>
+        </button>
+        <button class="tab" role="tab" data-category="street" aria-selected="false">
+          ストリート <span class="count" data-count="street"></span>
+        </button>
+        <button class="tab" role="tab" data-category="quality-simple" aria-selected="false">
+          上質シンプル <span class="count" data-count="quality-simple"></span>
+        </button>
+      </nav>
+
+      <div class="area-filter-wrap">
+        <span class="area-filter-label">📍 エリア</span>
+        <div class="area-multiselect">
+          <button type="button" class="area-button" id="area-button" aria-haspopup="listbox" aria-expanded="false">
+            <span id="area-button-label">すべて</span>
+            <span class="caret">▾</span>
+          </button>
+          <div class="area-popover is-hidden" id="area-popover" role="listbox">
+            <div class="area-popover-controls">
+              <button type="button" class="btn-mini" id="area-select-all">全選択</button>
+              <button type="button" class="btn-mini" id="area-select-none">全解除</button>
+            </div>
+            <div class="area-options" id="area-options"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main class="layout">

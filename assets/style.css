@@ -53,16 +53,50 @@ button { font-family: inherit; }
   display: flex; align-items: center; gap: 6px;
   margin-bottom: 6px; margin-left: auto;
 }
-.area-filter-wrap label {
+.area-filter-label {
   font-size: 11px; color: var(--text-dim); font-weight: 600; letter-spacing: 0.04em;
 }
-.area-filter-wrap select {
+
+.area-multiselect { position: relative; }
+.area-button {
+  appearance: none;
   background: var(--surface-2); border: 1px solid var(--border);
   color: var(--text); padding: 6px 10px; border-radius: 6px;
   font-size: 12px; font-family: inherit; font-weight: 600;
-  cursor: pointer; min-width: 130px;
+  cursor: pointer; min-width: 160px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
-.area-filter-wrap select:hover { border-color: var(--accent); }
+.area-button:hover { border-color: var(--accent); }
+.area-button .caret { color: var(--text-dim); font-size: 10px; }
+
+.area-popover {
+  position: absolute; top: calc(100% + 4px); right: 0;
+  width: 240px; max-height: 360px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; box-shadow: var(--shadow);
+  z-index: 1100;
+  display: flex; flex-direction: column;
+}
+.area-popover.is-hidden { display: none; }
+.area-popover-controls {
+  display: flex; gap: 6px; padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.area-options {
+  overflow-y: auto; padding: 6px 4px;
+  display: flex; flex-direction: column;
+}
+.area-options label {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; cursor: pointer;
+  font-size: 12px; color: var(--text); font-weight: 500;
+  border-radius: 4px;
+}
+.area-options label:hover { background: var(--surface-2); }
+.area-options label .area-count {
+  margin-left: auto; color: var(--text-dim); font-size: 11px; font-weight: 400;
+}
+.area-options input[type="checkbox"] { margin: 0; }
 
 /* ---------- Top tabs ---------- */
 .tabs { display: flex; gap: 0; overflow-x: auto; flex: 1 1 auto; min-width: 0; }
