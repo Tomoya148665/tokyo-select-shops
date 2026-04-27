@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>東京セレクトショップ MAP | Tokyo Select Shops</title>
+  <meta name="description" content="東京のハイセンス／ハイファッション系セレクトショップを地図で一覧。タブで切り替え可能。" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="" />
+
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="title">
+        <span class="title-jp">東京セレクトショップ MAP</span>
+        <span class="title-en">Tokyo Select Shops</span>
+      </h1>
+      <p class="subtitle">気になるショップを地図でチェック。タブでカテゴリを切替できます。</p>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="カテゴリ切替">
+      <button class="tab is-active" role="tab" data-category="all" aria-selected="true">
+        ALL <span class="count" data-count="all"></span>
+      </button>
+      <button class="tab" role="tab" data-category="high-sense" aria-selected="false">
+        ハイセンス <span class="count" data-count="high-sense"></span>
+      </button>
+      <button class="tab" role="tab" data-category="high-fashion" aria-selected="false">
+        ハイファッション <span class="count" data-count="high-fashion"></span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="map-area">
+      <div id="map" aria-label="東京セレクトショップの地図"></div>
+    </section>
+
+    <aside class="list-area" aria-label="ショップ一覧">
+      <ul id="shop-list" class="shop-list"></ul>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <small>
+      Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors / Tiles © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>
+    </small>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
+  <script src="assets/shops.js"></script>
+  <script src="assets/script.js"></script>
+</body>
+</html>

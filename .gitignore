@@ -1,0 +1,5 @@
+# 元データ(参考用に保存しているローカルファイル)
+*.html
+!index.html
+*_files/
+.DS_Store
