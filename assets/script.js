@@ -56,6 +56,27 @@
     for (const t of CATEGORY_ORDER) if (shop.tags.includes(t)) return t;
     return shop.tags[0];
   }
+  // Lowest rank across all categories (for sorting & marker label)
+  function bestRank(shop) {
+    const vals = shop.ranks ? Object.values(shop.ranks) : [];
+    return vals.length ? Math.min(...vals) : 999;
+  }
+  // Rank to display on a marker: prefer current category's rank if filtered
+  function displayRank(shop) {
+    if (currentCategory !== "all" && shop.ranks && shop.ranks[currentCategory] != null) {
+      return shop.ranks[currentCategory];
+    }
+    const r = bestRank(shop);
+    return r < 999 ? r : null;
+  }
+  // HTML for ranking badges per category (shown in cards & popups)
+  function rankBadgesHtml(shop) {
+    if (!shop.ranks) return "";
+    return Object.entries(shop.ranks)
+      .sort((a, b) => CATEGORY_ORDER.indexOf(a[0]) - CATEGORY_ORDER.indexOf(b[0]))
+      .map(([cat, n]) => `<span class="rank-badge rank-${cat}">${CATEGORY_LABEL[cat]} <strong>${n}位</strong></span>`)
+      .join("");
+  }
   function shopMatchesCategory(shop, category) {
     return category === "all" || shop.tags.includes(category);
   }
@@ -103,29 +124,41 @@
    * Markers
    * ============================================================ */
   window.SHOPS.forEach((shop) => {
-    const tag = primaryTag(shop);
-    const icon = L.divIcon({
-      className: "",
-      html: `<div class="shop-marker cat-${tag}" title="${escapeHtml(shop.name)}">${shop.rank ?? "•"}</div>`,
-      iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14]
-    });
-    const marker = L.marker(shop.coords, { icon }).bindPopup(buildPopupHTML(shop), { maxWidth: 300 });
+    const marker = L.marker(shop.coords, { icon: makeShopIcon(shop) })
+      .bindPopup(buildPopupHTML(shop), { maxWidth: 300 });
     marker.on("click", () => highlightListItem(shop.id));
     marker.addTo(map);
     markers.set(shop.id, marker);
   });
 
+  function makeShopIcon(shop) {
+    const tag = (currentCategory !== "all" && shop.ranks && shop.ranks[currentCategory] != null)
+      ? currentCategory : primaryTag(shop);
+    const r = displayRank(shop);
+    return L.divIcon({
+      className: "",
+      html: `<div class="shop-marker cat-${tag}" title="${escapeHtml(shop.name)}">${r ?? "•"}</div>`,
+      iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14]
+    });
+  }
+  function refreshAllMarkerIcons() {
+    window.SHOPS.forEach((shop) => {
+      const m = markers.get(shop.id);
+      if (m) m.setIcon(makeShopIcon(shop));
+    });
+  }
+
   function buildPopupHTML(shop) {
-    const tagsHtml = shop.tags.map((t) =>
-      `<span class="shop-tag tag-${t}">${CATEGORY_LABEL[t] || t}</span>`
-    ).join(" ");
     const closedTxt = shop.hours.closedDays.length
       ? ` (定休: ${shop.hours.closedDays.map(jaDay).join("・")})` : "";
+    const imgHtml = shop.image
+      ? `<div class="popup-image"><img src="${escapeHtml(shop.image)}?width=600" alt="${escapeHtml(shop.name)}" loading="lazy" onerror="this.parentNode.style.display='none'" /></div>`
+      : "";
     return `
-      <div class="popup-rank">${shop.rank ? `${shop.rank}位 / ` : ""}${shop.area}</div>
+      ${imgHtml}
+      <div class="rank-badges">${rankBadgesHtml(shop)}</div>
       <div class="popup-name">${escapeHtml(shop.name)}</div>
       <div class="popup-name-ja">${escapeHtml(shop.nameJa)}</div>
-      <div class="shop-tags" style="margin:4px 0 8px">${tagsHtml}</div>
       <div class="popup-desc">${escapeHtml(shop.description)}</div>
       <div class="popup-meta">📍 ${escapeHtml(shop.address)}</div>
       <div class="popup-meta">🕐 ${shop.hours.open}–${shop.hours.close}${closedTxt} ／ 滞在目安 ${shop.stayMin}分</div>
@@ -147,7 +180,11 @@
     const filtered = window.SHOPS
       .filter(shopMatchesFilters)
       .sort((a, b) => {
-        const ra = a.rank ?? 999, rb = b.rank ?? 999;
+        // Sort by rank in current category if filtered, else best rank
+        const ra = (currentCategory !== "all" && a.ranks?.[currentCategory] != null)
+          ? a.ranks[currentCategory] : bestRank(a);
+        const rb = (currentCategory !== "all" && b.ranks?.[currentCategory] != null)
+          ? b.ranks[currentCategory] : bestRank(b);
         if (ra !== rb) return ra - rb;
         return a.name.localeCompare(b.name);
       });
@@ -161,24 +198,24 @@
       const li = document.createElement("li");
       li.className = "shop-item";
       li.dataset.id = shop.id;
-      const tagsHtml = shop.tags.map((t) =>
-        `<span class="shop-tag tag-${t}">${CATEGORY_LABEL[t] || t}</span>`
-      ).join("");
       const closedTxt = shop.hours.closedDays.length
         ? `定休:${shop.hours.closedDays.map(jaDay).join("・")}` : "";
+      const thumbHtml = shop.image
+        ? `<div class="shop-thumb"><img src="${escapeHtml(shop.image)}?width=400" alt="" loading="lazy" onerror="this.parentNode.style.display='none'" /></div>`
+        : "";
       li.innerHTML = `
-        <div class="shop-item-head">
-          ${shop.rank ? `<span class="shop-rank">${shop.rank}位</span>` : ""}
-          <span class="shop-tags">${tagsHtml}</span>
-        </div>
-        <div class="shop-name">${escapeHtml(shop.name)}</div>
-        <div class="shop-name-ja">${escapeHtml(shop.nameJa)}</div>
-        <div class="shop-desc">${escapeHtml(shop.description)}</div>
-        <div class="shop-meta">
-          <span>📍 ${escapeHtml(shop.area)}</span>
-          <span>🕐 ${shop.hours.open}–${shop.hours.close}</span>
-          <span>⏱ ${shop.stayMin}分</span>
-          ${closedTxt ? `<span>🚫 ${closedTxt}</span>` : ""}
+        ${thumbHtml}
+        <div class="shop-body">
+          <div class="rank-badges">${rankBadgesHtml(shop)}</div>
+          <div class="shop-name">${escapeHtml(shop.name)}</div>
+          <div class="shop-name-ja">${escapeHtml(shop.nameJa)}</div>
+          <div class="shop-desc">${escapeHtml(shop.description)}</div>
+          <div class="shop-meta">
+            <span>📍 ${escapeHtml(shop.area)}</span>
+            <span>🕐 ${shop.hours.open}–${shop.hours.close}</span>
+            <span>⏱ ${shop.stayMin}分</span>
+            ${closedTxt ? `<span>🚫 ${closedTxt}</span>` : ""}
+          </div>
         </div>
       `;
       li.addEventListener("click", () => focusShop(shop.id));
@@ -206,6 +243,7 @@
    * Filters: category (tabs) + area (dropdown)
    * ============================================================ */
   function applyFilters() {
+    refreshAllMarkerIcons();
     window.SHOPS.forEach((shop) => {
       const m = markers.get(shop.id);
       const visible = shopMatchesFilters(shop);
@@ -356,7 +394,7 @@
     const sorted = [...window.SHOPS].sort((a, b) => {
       const aa = primaryTag(a), bb = primaryTag(b);
       if (aa !== bb) return CATEGORY_ORDER.indexOf(aa) - CATEGORY_ORDER.indexOf(bb);
-      return (a.rank ?? 999) - (b.rank ?? 999);
+      return bestRank(a) - bestRank(b);
     });
     sorted.forEach((shop) => {
       const id = `chk-${shop.id}`;
